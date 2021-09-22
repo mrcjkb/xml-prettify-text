@@ -27,11 +27,11 @@ import Prelude
 import qualified Data.Text as T
 
 prettyPrintXml :: XmlText -> XmlText
-prettyPrintXml input = printAllTags tags
+prettyPrintXml xmlText = printAllTags tags
   where
-    tags = inputToTags input
+    tags = inputToTags xmlText
 
-data TagType = Inc | Dec | Standalone
+data TagType = IncTagType | DecTagType | StandaloneTagType
   deriving stock (Ord, Eq, Enum)
 
 type XmlText = T.Text
@@ -44,54 +44,53 @@ data XmlTag = XmlTag
 
 inputToTags :: XmlText -> [XmlTag]
 inputToTags "" = []
-inputToTags st = xtag : inputToTags st'
+inputToTags xmlText = xtag : inputToTags xmlText'
   where
-    (xtag, st') = lexOne st
+    (xtag, xmlText') = lexOne xmlText
 
 lexOne :: XmlText -> (XmlTag, XmlText)
-lexOne inp = case (nextC == '<', nextC == ' ') of
-  (_, True) -> (XmlTag "" Standalone, "")
-  (True, _) -> lexOneTag inp
-  (False, _) -> lexNonTagged inp
+lexOne xmlText = case (nextC == '<', nextC == ' ') of
+  (_, True) -> (XmlTag "" StandaloneTagType, "")
+  (True, _) -> lexOneTag xmlText
+  (False, _) -> lexNonTagged xmlText
   where
-    nextS = T.dropWhile (`elem` newLineChars) inp
+    nextS = T.dropWhile (`elem` whiteSpaceOrNewlineChars) xmlText
     nextC = T.head $ nextS <> " "
 
 lexNonTagged :: XmlText -> (XmlTag, XmlText)
-lexNonTagged inp = (XmlTag con xtag, remaining)
+lexNonTagged xmlText = (XmlTag tagContent tagType, remaining)
   where
-    inp' = T.dropWhile (`elem` newLineChars) inp
-    (con, remaining) = T.span (`notElem` taggedChars) inp'
-    xtag = Standalone
-    taggedChars = " \n\r<" :: [Char]
+    xmlTextWithoutWhitespaceOrNewLines = T.dropWhile (`elem` whiteSpaceOrNewlineChars) xmlText
+    (tagContent, remaining) = T.span (`notElem` [' ', '\n', '\r', '<']) xmlTextWithoutWhitespaceOrNewLines
+    tagType = StandaloneTagType
 
-newLineChars :: [Char]
-newLineChars = " \t\r\n"
+whiteSpaceOrNewlineChars :: [Char]
+whiteSpaceOrNewlineChars = " \t\r\n"
 
 lexOneTag :: XmlText -> (XmlTag, XmlText)
-lexOneTag inp = (XmlTag contnt xtag, res)
+lexOneTag xmlText = (XmlTag tagContent tagType, res)
   where
-    inp' = T.dropWhile (/= '<') inp
-    (con, remaining) = T.span (/= '>') inp'
-    contnt = con <> (T.singleton . T.head) remaining
+    afterTagStart = T.dropWhile (/= '<') xmlText
+    (tagContent', remaining) = T.span (/= '>') afterTagStart
+    tagContent = tagContent' <> (T.singleton . T.head) remaining
     res = T.tail remaining
-    xtag = case (T.index contnt 1, T.index (T.reverse contnt) 1) of
-      ('/', _) -> Dec
-      (_, '/') -> Standalone
-      ('!', _) -> Standalone
-      ('?', _) -> Standalone
-      (_, _) -> Inc
+    tagType = case (T.index tagContent 1, T.index (T.reverse tagContent) 1) of
+      ('/', _) -> DecTagType
+      (_, '/') -> StandaloneTagType
+      ('!', _) -> StandaloneTagType
+      ('?', _) -> StandaloneTagType
+      (_, _) -> IncTagType
 
 printTag :: XmlTag -> Int -> (XmlText, Int)
 printTag tag ident = (outtext, ident2)
   where
     ident1 = case tagtype tag of
-      Dec -> ident - 1
+      DecTagType -> ident - 1
       _ -> ident
     outtext = T.replicate (ident1 * 2) " " <> content tag
     ident2 = case tagtype tag of
-      Inc -> ident + 1
-      Dec -> ident - 1
+      IncTagType -> ident + 1
+      DecTagType -> ident - 1
       _ -> ident
 
 printAllTags :: [XmlTag] -> XmlText
