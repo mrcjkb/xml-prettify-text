@@ -47,7 +47,7 @@ inputToTags :: XmlText -> [XmlTag]
 inputToTags "" = []
 inputToTags xmlText = xtag : inputToTags xmlText'
   where
-    singleLineXmlText = mconcat $ T.lines xmlText
+    singleLineXmlText = T.concat $ T.lines xmlText
     (xtag, xmlText') = lexOne singleLineXmlText
 
 lexOne :: XmlText -> (XmlTag, XmlText)
@@ -74,7 +74,7 @@ lexOneTag xmlText = (XmlTag tagContent tagType, res)
   where
     afterTagStart = T.dropWhile (/= '<') xmlText
     (tagContent', remaining) = T.span (/= '>') afterTagStart
-    tagContent = tagContent' <> (T.singleton . T.head) remaining
+    tagContent =  tagContent' <> (T.singleton . T.head) remaining
     res = T.tail remaining
     tagType = case (T.index tagContent 1, T.index tagContent (T.length tagContent - 2)) of
       ('/', _) -> DecTagType
