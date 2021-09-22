@@ -9,3 +9,10 @@ XML pretty printer based on [xml-prettify](https://github.com/rosenbergdm/xml-pr
 [![GPL-2.0-only license](https://img.shields.io/badge/license-GPL--2.0--only-blue.svg)](LICENSE)
 
 See README for more info
+
+## TODO ##
+- [x] Port xml-prettify for use with Text
+- [ ] Refactor for better readability
+- [ ] Implement golden tests
+- [ ] Profile, benchmark & squeeze performance
+
