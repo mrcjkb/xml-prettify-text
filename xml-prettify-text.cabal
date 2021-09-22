@@ -15,6 +15,9 @@ build-type:          Simple
 extra-doc-files:     README.md
                      CHANGELOG.md
 tested-with:         GHC == 8.8.3
+data-files:
+    data/tests/prettyPrintTest.out.golden
+    data/tests/prettyPrintTest.xml
 
 source-repository head
   type:                git
@@ -61,7 +64,13 @@ test-suite xml-prettify-text-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             Spec.hs
+  other-modules:       
+                       PrettyPrintGoldenTest
   build-depends:       xml-prettify-text
+                     , tasty ^>= 1.4.2
+                     , tasty-golden ^>= 2.3.4
+                     , text ^>= 1.2.4.0
+                     , filepath ^>= 1.4.2.1
   ghc-options:         -threaded
                        -rtsopts
                        -with-rtsopts=-N

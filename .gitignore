@@ -55,3 +55,6 @@ TAGS
 
 # Vim session file
 Session.vim
+
+# Tests out files
+*.out

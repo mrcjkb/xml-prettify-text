@@ -1,5 +1,14 @@
 module Main (main) where
 
+import PrettyPrintGoldenTest
+import Test.Tasty
 
 main :: IO ()
-main = putStrLn ("Test suite is not implemented" :: String)
+main = do
+  goldens <- prettyPrintGoldentTest
+  defaultMain
+    ( testGroup
+        "All tests"
+        [ testGroup "Golden tests" goldens
+        ]
+    )
