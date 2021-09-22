@@ -81,8 +81,8 @@ lexOneTag xmlText = (XmlTag tagContent tagType, res)
       ('?', _) -> StandaloneTagType
       (_, _) -> IncTagType
 
-printTag :: XmlTag -> Int -> (XmlText, Int)
-printTag tag ident = (outtext, ident2)
+printTag :: Int -> XmlTag -> (XmlText, Int)
+printTag ident tag = (outtext, ident2)
   where
     ident1 = case tagtype tag of
       DecTagType -> ident - 1
@@ -98,6 +98,7 @@ printAllTags = printTags 0
 
 printTags :: Int -> [XmlTag] -> XmlText
 printTags _ [] = ""
-printTags ident (tag:tags) = mconcat [tagText, "\n", printTags ident' tags]
+printTags ident (tag:tags) = T.intercalate "\n" [tagText, remainingTagText]
   where
-    (tagText, ident') = printTag tag ident
+    (tagText, ident') = printTag ident tag
+    remainingTagText = printTags ident' tags
