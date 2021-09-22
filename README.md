@@ -10,6 +10,14 @@
 
 See README for more info
 
+## Motivation ##
+Why re-implement [xml-prettify](https://github.com/rosenbergdm/xml-prettify)? 
+- I am not satisfied with the [Text.PrettyPrint](https://hackage.haskell.org/package/pretty-1.1.3.6/docs/Text-PrettyPrint.html#t:Doc) output.
+- `xml-prettify` produces good output, but with poor performance.
+- `xml-prettify` appears not to be maintained (I haven't been able to use it as a library in modern projects).
+- Some more configurability (see TODOs) would be great.
+- A good project for me to practise profiling and benchmarking in Haskell.
+
 ## TODO ##
 - [x] Port xml-prettify for use with Text
 - [x] Refactor for better readability
