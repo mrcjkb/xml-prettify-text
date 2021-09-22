@@ -2,7 +2,7 @@
 
 [WIP] XML pretty printer based on [xml-prettify](https://github.com/rosenbergdm/xml-prettify) by David M. Rosenberg. Modified to work with `Text` instead of `String` and tuned for improved performance.
 
-[![Build Status](https://app.travis-ci.com/MrcJkb/xml-prettify-text.svg?branch=master)](https://app.travis-ci.com/MrcJkb/xml-prettify-text)
+[![Build status](https://img.shields.io/travis/MrcJkb/xml-prettify-text.svg?logo=travis)](https://app.travis-ci.com/MrcJkb/xml-prettify-text)
 [![Hackage](https://img.shields.io/hackage/v/xml-prettify-text.svg?logo=haskell)](https://hackage.haskell.org/package/xml-prettify-text)
 [![Stackage Lts](http://stackage.org/package/xml-prettify-text/badge/lts)](http://stackage.org/lts/package/xml-prettify-text)
 [![Stackage Nightly](http://stackage.org/package/xml-prettify-text/badge/nightly)](http://stackage.org/nightly/package/xml-prettify-text)
