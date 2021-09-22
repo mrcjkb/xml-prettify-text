@@ -12,7 +12,9 @@ See README for more info
 
 ## TODO ##
 - [x] Port xml-prettify for use with Text
-- [ ] Refactor for better readability
+- [x] Refactor for better readability
 - [ ] Implement golden tests
 - [ ] Profile, benchmark & squeeze performance
+- [ ] Add options for specifying newlines, indent-style, indent-size, etc.
+- [ ] Create app
 
