@@ -56,15 +56,18 @@ lexOne xmlText = case nextCharacter of
   '<' -> lexOneTag xmlText
   _ -> lexNonTagged xmlText
   where
-    nextWord = T.dropWhile isSpace xmlText
+    nextWord = getWord xmlText
     nextCharacter = T.head $ nextWord <> " "
 
 lexNonTagged :: XmlText -> (XmlTag, XmlText)
 lexNonTagged xmlText = (XmlTag tagContent tagType, remaining)
   where
-    xmlTextAfterWhitespaceOrNewLines = T.dropWhile isSpace xmlText
-    (tagContent, remaining) = T.break (== '<') xmlTextAfterWhitespaceOrNewLines
+    nextWord = getWord xmlText
+    (tagContent, remaining) = T.break (== '<') nextWord
     tagType = StandaloneTagType
+
+getWord :: T.Text -> T.Text
+getWord = T.dropWhile isSpace
 
 lexOneTag :: XmlText -> (XmlTag, XmlText)
 lexOneTag xmlText = (XmlTag tagContent tagType, res)
@@ -73,7 +76,7 @@ lexOneTag xmlText = (XmlTag tagContent tagType, res)
     (tagContent', remaining) = T.span (/= '>') afterTagStart
     tagContent = tagContent' <> (T.singleton . T.head) remaining
     res = T.tail remaining
-    tagType = case (T.index tagContent 1, T.index (T.reverse tagContent) 1) of
+    tagType = case (T.index tagContent 1, T.index tagContent (T.length tagContent - 1)) of
       ('/', _) -> DecTagType
       (_, '/') -> StandaloneTagType
       ('!', _) -> StandaloneTagType
