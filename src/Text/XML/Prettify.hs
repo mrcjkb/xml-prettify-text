@@ -25,6 +25,7 @@ where
 
 import Prelude
 import qualified Data.Text as T
+import Data.Char (isSpace)
 
 prettyPrintXml :: XmlText -> XmlText
 prettyPrintXml xmlText = printAllTags tags
@@ -46,26 +47,24 @@ inputToTags :: XmlText -> [XmlTag]
 inputToTags "" = []
 inputToTags xmlText = xtag : inputToTags xmlText'
   where
-    (xtag, xmlText') = lexOne xmlText
+    singleLineXmlText = mconcat $ T.lines xmlText
+    (xtag, xmlText') = lexOne singleLineXmlText
 
 lexOne :: XmlText -> (XmlTag, XmlText)
-lexOne xmlText = case nextC of
+lexOne xmlText = case nextCharacter of
   ' ' -> (XmlTag "" StandaloneTagType, "")
   '<' -> lexOneTag xmlText
   _ -> lexNonTagged xmlText
   where
-    nextS = T.dropWhile (`elem` whiteSpaceOrNewlineChars) xmlText
-    nextC = T.head $ nextS <> " "
+    nextWord = T.dropWhile isSpace xmlText
+    nextCharacter = T.head $ nextWord <> " "
 
 lexNonTagged :: XmlText -> (XmlTag, XmlText)
 lexNonTagged xmlText = (XmlTag tagContent tagType, remaining)
   where
-    xmlTextWithoutWhitespaceOrNewLines = T.dropWhile (`elem` whiteSpaceOrNewlineChars) xmlText
-    (tagContent, remaining) = T.break (== '<') xmlTextWithoutWhitespaceOrNewLines
+    xmlTextAfterWhitespaceOrNewLines = T.dropWhile isSpace xmlText
+    (tagContent, remaining) = T.break (== '<') xmlTextAfterWhitespaceOrNewLines
     tagType = StandaloneTagType
-
-whiteSpaceOrNewlineChars :: [Char]
-whiteSpaceOrNewlineChars = " \t\r\n"
 
 lexOneTag :: XmlText -> (XmlTag, XmlText)
 lexOneTag xmlText = (XmlTag tagContent tagType, res)
