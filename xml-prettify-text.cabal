@@ -21,10 +21,10 @@ source-repository head
   location:            https://github.com/MrcJkb/xml-prettify-text.git
 common common-options
   build-depends:       base ^>= 4.13.0.0
-                     , Protolude
+                     , protolude ^>= 0.2.4
   
   mixins:              base hiding (Prelude)
-                     , Protolude (Protolude as Prelude)
+                     , protolude (Protolude as Prelude)
   ghc-options:         -Wall
                        -Wcompat
                        -Widentities
@@ -44,7 +44,10 @@ common common-options
 library
   import:              common-options
   hs-source-dirs:      src
-  exposed-modules:     XmlPrettifyText
+  exposed-modules:     Text.XML.Prettify
+  build-depends:       base ^>= 4.13.0.0
+                     , protolude ^>= 0.2.4
+                     , text ^>= 1.2.4.0
 executable xml-prettify-text
   import:              common-options
   hs-source-dirs:      app

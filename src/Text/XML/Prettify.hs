@@ -12,7 +12,10 @@
 --
 -- Description  : Pretty-print XML Text
 -----------------------------------------------------------------------------
+{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE DerivingStrategies #-}
+
 
 module Text.XML.Prettify
   ( XmlText,
@@ -20,6 +23,7 @@ module Text.XML.Prettify
   )
 where
 
+import Prelude
 import qualified Data.Text as T
 
 prettyPrintXml :: XmlText -> XmlText
@@ -28,7 +32,7 @@ prettyPrintXml input = printAllTags tags
     tags = inputToTags input
 
 data TagType = Inc | Dec | Standalone
-  deriving (Read, Ord, Show, Eq, Enum)
+  deriving stock (Read, Ord, Show, Eq, Enum)
 
 type XmlText = T.Text
 
@@ -36,7 +40,7 @@ data XmlTag = XmlTag
   { content :: XmlText,
     tagtype :: TagType
   }
-  deriving (Read, Ord, Eq, Show)
+  deriving stock (Read, Ord, Eq, Show)
 
 inputToTags :: XmlText -> [XmlTag]
 inputToTags "" = []
@@ -54,23 +58,23 @@ lexOne inp = case (nextC == '<', nextC == ' ') of
     nextC = T.head $ nextS <> " "
 
 lexNonTagged :: XmlText -> (XmlTag, XmlText)
-lexNonTagged inp = (XmlTag con xtag, rem)
+lexNonTagged inp = (XmlTag con xtag, remaining)
   where
     inp' = T.dropWhile (`elem` newLineChars) inp
-    (con, rem) = T.span (`notElem` taggedChars) inp'
+    (con, remaining) = T.span (`notElem` taggedChars) inp'
     xtag = Standalone
-    taggedChars = " \n\r<" :: String
+    taggedChars = " \n\r<" :: [Char]
 
-newLineChars :: String
+newLineChars :: [Char]
 newLineChars = " \t\r\n"
 
 lexOneTag :: XmlText -> (XmlTag, XmlText)
 lexOneTag inp = (XmlTag contnt xtag, res)
   where
     inp' = T.dropWhile (/= '<') inp
-    (con, rem) = T.span (/= '>') inp'
-    contnt = con <> (T.singleton . T.head) rem
-    res = T.tail rem
+    (con, remaining) = T.span (/= '>') inp'
+    contnt = con <> (T.singleton . T.head) remaining
+    res = T.tail remaining
     xtag = case (T.index contnt 1, T.index (T.reverse contnt) 1) of
       ('/', _) -> Dec
       (_, '/') -> Standalone
