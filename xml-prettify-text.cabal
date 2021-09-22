@@ -67,8 +67,8 @@ test-suite xml-prettify-text-test
   other-modules:       
                        PrettyPrintGoldenTest
   build-depends:       xml-prettify-text
-                     , tasty ^>= 1.4.2
-                     , tasty-golden ^>= 2.3.4
+                     , tasty ^>= 1.2.3
+                     , tasty-golden ^>= 2.3.3
                      , text ^>= 1.2.4.0
                      , filepath ^>= 1.4.2.1
   ghc-options:         -threaded
