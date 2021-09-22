@@ -49,10 +49,10 @@ inputToTags xmlText = xtag : inputToTags xmlText'
     (xtag, xmlText') = lexOne xmlText
 
 lexOne :: XmlText -> (XmlTag, XmlText)
-lexOne xmlText = case (nextC == '<', nextC == ' ') of
-  (_, True) -> (XmlTag "" StandaloneTagType, "")
-  (True, _) -> lexOneTag xmlText
-  (False, _) -> lexNonTagged xmlText
+lexOne xmlText = case nextC of
+  ' ' -> (XmlTag "" StandaloneTagType, "")
+  '<' -> lexOneTag xmlText
+  _ -> lexNonTagged xmlText
   where
     nextS = T.dropWhile (`elem` whiteSpaceOrNewlineChars) xmlText
     nextC = T.head $ nextS <> " "
