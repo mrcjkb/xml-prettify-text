@@ -32,7 +32,7 @@ prettyPrintXml input = printAllTags tags
     tags = inputToTags input
 
 data TagType = Inc | Dec | Standalone
-  deriving stock (Read, Ord, Show, Eq, Enum)
+  deriving stock (Ord, Eq, Enum)
 
 type XmlText = T.Text
 
@@ -40,7 +40,7 @@ data XmlTag = XmlTag
   { content :: XmlText,
     tagtype :: TagType
   }
-  deriving stock (Read, Ord, Eq, Show)
+  deriving stock (Ord, Eq)
 
 inputToTags :: XmlText -> [XmlTag]
 inputToTags "" = []
