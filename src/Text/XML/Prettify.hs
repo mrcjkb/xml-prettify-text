@@ -30,12 +30,13 @@ import Data.Char (isSpace)
 prettyPrintXml :: XmlText -> XmlText
 prettyPrintXml xmlText = printAllTags tags
   where
-    tags = mconcat $ map inputToTags $ T.lines xmlText
+    tags = inputToTags $ T.concat $ T.lines xmlText
 
 data TagType = IncTagType | DecTagType | StandaloneTagType
   deriving stock (Ord, Eq, Enum)
 
 type XmlText = T.Text
+type OneLineXmlText = XmlText
 
 data XmlTag = XmlTag
   { content :: XmlText,
@@ -43,13 +44,13 @@ data XmlTag = XmlTag
   }
   deriving stock (Ord, Eq)
 
-inputToTags :: XmlText -> [XmlTag]
+inputToTags :: OneLineXmlText -> [XmlTag]
 inputToTags "" = []
 inputToTags xmlText = xtag : inputToTags xmlText'
   where
     (xtag, xmlText') = lexOne xmlText
 
-lexOne :: XmlText -> (XmlTag, XmlText)
+lexOne :: OneLineXmlText -> (XmlTag, OneLineXmlText)
 lexOne xmlText = case nextCharacter of
   ' ' -> (XmlTag "" StandaloneTagType, "")
   '<' -> lexOneTag xmlText
@@ -58,7 +59,7 @@ lexOne xmlText = case nextCharacter of
     nextWord = getWord xmlText
     nextCharacter = T.head $ nextWord <> " "
 
-lexNonTagged :: XmlText -> (XmlTag, XmlText)
+lexNonTagged :: OneLineXmlText -> (XmlTag, OneLineXmlText)
 lexNonTagged xmlText = (XmlTag tagContent tagType, remaining)
   where
     nextWord = getWord xmlText
@@ -68,7 +69,7 @@ lexNonTagged xmlText = (XmlTag tagContent tagType, remaining)
 getWord :: T.Text -> T.Text
 getWord = T.dropWhile isSpace
 
-lexOneTag :: XmlText -> (XmlTag, XmlText)
+lexOneTag :: OneLineXmlText -> (XmlTag, OneLineXmlText)
 lexOneTag xmlText = (XmlTag tagContent tagType, res)
   where
     afterTagStart = T.dropWhile (/= '<') xmlText
