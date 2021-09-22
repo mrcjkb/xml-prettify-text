@@ -98,6 +98,6 @@ printAllTags = printTags 0
 
 printTags :: Int -> [XmlTag] -> XmlText
 printTags _ [] = ""
-printTags ident (tag:tags) = mconcat [txt, "\n", printTags ident' tags]
+printTags ident (tag:tags) = mconcat [tagText, "\n", printTags ident' tags]
   where
-    (txt, ident') = printTag tag ident
+    (tagText, ident') = printTag tag ident
