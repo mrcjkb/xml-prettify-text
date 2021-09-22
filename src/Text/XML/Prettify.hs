@@ -61,7 +61,7 @@ lexNonTagged :: XmlText -> (XmlTag, XmlText)
 lexNonTagged xmlText = (XmlTag tagContent tagType, remaining)
   where
     xmlTextWithoutWhitespaceOrNewLines = T.dropWhile (`elem` whiteSpaceOrNewlineChars) xmlText
-    (tagContent, remaining) = T.span (`notElem` [' ', '\n', '\r', '<']) xmlTextWithoutWhitespaceOrNewLines
+    (tagContent, remaining) = T.break (== '<') xmlTextWithoutWhitespaceOrNewLines
     tagType = StandaloneTagType
 
 whiteSpaceOrNewlineChars :: [Char]
