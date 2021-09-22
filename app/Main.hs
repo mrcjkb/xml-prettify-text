@@ -2,4 +2,4 @@ module Main (main) where
 
 
 main :: IO ()
-main = undefined
+main = putStrLn "App not implemented yet."
