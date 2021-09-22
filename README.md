@@ -21,7 +21,7 @@ Why re-implement [xml-prettify](https://github.com/rosenbergdm/xml-prettify)?
 ## TODO ##
 - [x] Port xml-prettify for use with Text
 - [x] Refactor for better readability
-- [ ] Implement golden tests
+- [x] Implement golden tests
 - [ ] Profile, benchmark & squeeze performance
 - [ ] Add options for specifying newlines, indent-style, indent-size, etc.
 - [ ] Create app
