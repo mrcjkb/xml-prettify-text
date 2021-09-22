@@ -87,7 +87,7 @@ printTag tag ident = (outtext, ident2)
     ident1 = case tagtype tag of
       DecTagType -> ident - 1
       _ -> ident
-    outtext = T.replicate (ident1 * 2) " " <> content tag
+    outtext = T.replicate ident1 "  " <> content tag
     ident2 = case tagtype tag of
       IncTagType -> ident + 1
       DecTagType -> ident - 1
