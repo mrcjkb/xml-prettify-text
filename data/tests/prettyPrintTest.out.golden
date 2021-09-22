@@ -1,4 +1,6 @@
 <root>
+  <standaloneTagTest1/>
+  <!--comment-->
   <cent>
     -2036987824
   </cent>

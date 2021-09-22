@@ -76,7 +76,7 @@ lexOneTag xmlText = (XmlTag tagContent tagType, res)
     (tagContent', remaining) = T.span (/= '>') afterTagStart
     tagContent = tagContent' <> (T.singleton . T.head) remaining
     res = T.tail remaining
-    tagType = case (T.index tagContent 1, T.index tagContent (T.length tagContent - 1)) of
+    tagType = case (T.index tagContent 1, T.index tagContent (T.length tagContent - 2)) of
       ('/', _) -> DecTagType
       (_, '/') -> StandaloneTagType
       ('!', _) -> StandaloneTagType
