@@ -30,7 +30,7 @@ import Data.Char (isSpace)
 prettyPrintXml :: XmlText -> XmlText
 prettyPrintXml xmlText = printAllTags tags
   where
-    tags = inputToTags xmlText
+    tags = mconcat $ map inputToTags $ T.lines xmlText
 
 data TagType = IncTagType | DecTagType | StandaloneTagType
   deriving stock (Ord, Eq, Enum)
@@ -47,8 +47,7 @@ inputToTags :: XmlText -> [XmlTag]
 inputToTags "" = []
 inputToTags xmlText = xtag : inputToTags xmlText'
   where
-    singleLineXmlText = T.concat $ T.lines xmlText
-    (xtag, xmlText') = lexOne singleLineXmlText
+    (xtag, xmlText') = lexOne xmlText
 
 lexOne :: XmlText -> (XmlTag, XmlText)
 lexOne xmlText = case nextCharacter of
