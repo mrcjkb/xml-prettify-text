@@ -82,13 +82,13 @@ lexOneTag xmlText = (XmlTag tagContent tagType, res)
       (_, _) -> IncTagType
 
 printTag :: Int -> XmlTag -> (Int, XmlText)
-printTag tagIdent (XmlTag tagContent tagType) = (nextTagIdent, outText)
+printTag tagIdent (XmlTag content tagType) = (nextTagIdent, outText)
   where
     (contentIdent, nextTagIdent) = case tagType of
       IncTagType -> (tagIdent, tagIdent + 1)
       DecTagType -> (tagIdent - 1, tagIdent - 1)
       _ -> (tagIdent, tagIdent)
-    outText = T.replicate contentIdent "  " <> tagContent
+    outText = T.replicate contentIdent "  " <> content
 
 printAllTags :: [XmlTag] -> XmlText
 printAllTags = printTags 0
