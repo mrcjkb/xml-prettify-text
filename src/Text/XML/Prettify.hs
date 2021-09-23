@@ -1,16 +1,20 @@
 -----------------------------------------------------------------------------
 -- Based on Text.XML.Prettify by David M. Rosenberg
--- Module       : Text.XML.Prettify
 -- Copyright    : (c) 2010 David M. Rosenberg
 -- License      : BSD3
+-----------------------------------------------------------------------------
+-- Module        :  Text.XML.Prettify
 --
--- Modified by  : Marc Jakobi, 2021-09-09
+-- Maintained by :  Marc Jakobi, 2021-09-09
 -- Modifications:
---                - Update to Haskell 2010
---                - Replace String with Data.Text
---                - Encapsulate internals of module
+--                 - Update to Haskell 2010
+--                 - Replace String with Data.Text
+--                 - Encapsulate internals of module
+--                 - Tweak performance
 --
--- Description  : Pretty-print XML Text
+-- License       :  GPL2
+--
+-- Description   :  Pretty-print XML Text
 -----------------------------------------------------------------------------
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
