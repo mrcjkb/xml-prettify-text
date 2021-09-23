@@ -1,3 +1,5 @@
+{-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE OverloadedStrings #-}
 -----------------------------------------------------------------------------
 -- Based on Text.XML.Prettify by David M. Rosenberg
 -- Copyright    : (c) 2010 David M. Rosenberg
@@ -17,22 +19,42 @@
 -- Description   :  Pretty-print XML Text
 -----------------------------------------------------------------------------
 {-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE DerivingStrategies #-}
-
 
 module Text.XML.Prettify
   ( XmlText,
     prettyPrintXml,
+    prettyPrintXmlDefault,
+    module Text.XML.Prettify.Options,
   )
 where
 
-import Prelude
-import qualified Data.Text as T
+import Control.Monad.Reader
 import Data.Char (isSpace)
+import qualified Data.Text as T
+import Text.XML.Prettify.Options
+import TextShow
+import Prelude
 
-prettyPrintXml :: XmlText -> XmlText
-prettyPrintXml xmlText = printAllTags tags
+type Prettify = Reader PrettifyOpts
+
+-- | Pretty-print an XML text with the default options:
+-- EndOfLine: LF
+-- Indent style: 2 spaces
+-- Returns: The pretty-printed XML
+prettyPrintXmlDefault :: XmlText -> XmlText
+prettyPrintXmlDefault =
+  prettyPrintXml
+    PrettifyOpts
+      { endOfLine = LF,
+        indentStyle = Space 2
+      }
+
+-- | Pretty-print an XML text
+-- opts: The output options
+-- xmlText: xml text (e.g. on one line)
+-- Returnms: The pretty-printed XML
+prettyPrintXml :: PrettifyOpts -> XmlText -> XmlText
+prettyPrintXml opts xmlText = runReader (printAllTags tags) opts
   where
     tags = inputToTags $ T.concat $ T.lines xmlText
 
@@ -40,7 +62,9 @@ data TagType = IncTagType | DecTagType | StandaloneTagType
   deriving stock (Ord, Eq, Enum)
 
 type XmlText = T.Text
+
 type TagContent = T.Text
+
 type OneLineXmlText = XmlText
 
 data XmlTag = XmlTag TagContent TagType
@@ -76,7 +100,7 @@ lexOneTag xmlText = (XmlTag tagContent tagType, res)
   where
     afterTagStart = T.dropWhile (/= '<') xmlText
     (tagContent', remaining) = T.span (/= '>') afterTagStart
-    tagContent =  tagContent' <> (T.singleton . T.head) remaining
+    tagContent = tagContent' <> (T.singleton . T.head) remaining
     res = T.tail remaining
     tagType = case (T.index tagContent 1, T.index tagContent (T.length tagContent - 2)) of
       ('/', _) -> DecTagType
@@ -85,21 +109,24 @@ lexOneTag xmlText = (XmlTag tagContent tagType, res)
       ('?', _) -> StandaloneTagType
       (_, _) -> IncTagType
 
-printTag :: Int -> XmlTag -> (Int, XmlText)
-printTag tagIdent (XmlTag content tagType) = (nextTagIdent, outText)
-  where
-    (contentIdent, nextTagIdent) = case tagType of
-      IncTagType -> (tagIdent, tagIdent + 1)
-      DecTagType -> (tagIdent - 1, tagIdent - 1)
-      _ -> (tagIdent, tagIdent)
-    outText = T.replicate contentIdent "  " <> content
+printTag :: Int -> XmlTag -> Prettify (Int, XmlText)
+printTag tagIdent (XmlTag content tagType) = do
+  identStyle <- asks indentStyle
+  let identText = showt identStyle
+  let (contentIdent, nextTagIdent) = case tagType of
+        IncTagType -> (tagIdent, tagIdent + 1)
+        DecTagType -> (tagIdent - 1, tagIdent - 1)
+        _ -> (tagIdent, tagIdent)
+  let outText = T.replicate contentIdent identText <> content
+  pure (nextTagIdent, outText)
 
-printAllTags :: [XmlTag] -> XmlText
+printAllTags :: [XmlTag] -> Prettify XmlText
 printAllTags = printTags 0
 
-printTags :: Int -> [XmlTag] -> XmlText
-printTags _ [] = ""
-printTags ident (tag:tags) = T.intercalate "\n" [tagText, remainingTagText]
-  where
-    (nextTagIdent, tagText) = printTag ident tag
-    remainingTagText = printTags nextTagIdent tags
+printTags :: Int -> [XmlTag] -> Prettify XmlText
+printTags _ [] = pure ""
+printTags ident (tag : tags) = do
+  eol <- asks endOfLine
+  (nextTagIdent, tagText) <- printTag ident tag
+  remainingTagText <- printTags nextTagIdent tags
+  pure $ T.intercalate (showt eol) [tagText, remainingTagText]

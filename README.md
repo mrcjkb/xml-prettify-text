@@ -23,6 +23,6 @@ Why re-implement [xml-prettify](https://github.com/rosenbergdm/xml-prettify)?
 - [x] Refactor for better readability
 - [x] Implement golden tests
 - [x] Profile, benchmark & squeeze performance
-- [ ] Add options for specifying newlines, indent-style, indent-size, etc.
+- [x] Add options for specifying newlines, indent-style, indent-size, etc.
 - [ ] Create app
 

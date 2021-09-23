@@ -48,8 +48,11 @@ library
   import:              common-options
   hs-source-dirs:      src
   exposed-modules:     Text.XML.Prettify
+                     , Text.XML.Prettify.Options
   build-depends:       base ^>= 4.13.0.0
                      , text ^>= 1.2.4.0
+                     , text-show ^>= 3.8.5
+                     , mtl ^>= 2.2.2
 executable xml-prettify-text
   import:              common-options
   hs-source-dirs:      app
