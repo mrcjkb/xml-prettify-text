@@ -1,11 +1,12 @@
 {-# LANGUAGE RecordWildCards #-}
+
 module Main (main) where
 
 import Control.Exception
-import Options.Applicative as Opt
-import System.IO.Error (isDoesNotExistError, ioeGetFileName)
-import Text.XML.Prettify
 import qualified Data.Text.IO as TIO
+import Options.Applicative as Opt
+import System.IO.Error (ioeGetFileName, isDoesNotExistError)
+import Text.XML.Prettify
 import Prelude
 
 main :: IO ()
@@ -37,15 +38,17 @@ main =
 runMainWithConfig :: Options -> IO ()
 runMainWithConfig Options {..} = do
   uglyXml <- case inputOption of
-               (FromFile filePath) -> TIO.readFile filePath
-               (FromText xmlText) -> pure xmlText
-  putStrLn uglyXml
+    (FromFile filePath) -> TIO.readFile filePath
+    (FromText xmlText) -> pure xmlText
+  let prettyXml = prettyPrintXml prettifyOptions uglyXml
+  liftIO $ case outputOption of
+    (ToFile filePath) -> TIO.writeFile filePath prettyXml
+    _ -> TIO.putStrLn prettyXml
 
 data Options = Options
-  {
-    inputOption :: InputOption,
+  { inputOption :: InputOption,
     outputOption :: OutputOption,
-    prettifyOptions :: Maybe PrettifyOpts
+    prettifyOptions :: PrettifyOpts
   }
 
 data InputOption = FromFile FilePath | FromText XmlText
@@ -83,7 +86,9 @@ mkOptions = Options <$> inputOpt <*> outputOpt <*> prettifyOpts
     outputToFile = ToFile <$> outputFile
     outputToConsole :: Parser OutputOption
     outputToConsole =
-      flag ToConsole ToConsole
+      flag
+        ToConsole
+        ToConsole
         ( long "console"
             <> short 'c'
             <> help "Output the pretty-printed xml to the console"
@@ -91,15 +96,22 @@ mkOptions = Options <$> inputOpt <*> outputOpt <*> prettifyOpts
     outputOpt :: Parser OutputOption
     outputOpt = outputToFile <|> outputToConsole
     eol :: Parser EndOfLine
-    eol = Opt.option auto
-        (long "eol"
-          <> help "The line-break style"
-          <> showDefault
-          <> value LF
-          <> metavar "LF, CR, or CRLF")
-    prettifyOpts :: Parser (Maybe PrettifyOpts)
-    prettifyOpts = pure Nothing
-
+    eol =
+      Opt.option
+        auto
+        ( long "eol"
+            <> help "The line-break style"
+            <> showDefault
+            <> value LF
+            <> metavar "LF, CR, or CRLF"
+        )
+    prettifyOpts :: Parser PrettifyOpts
+    prettifyOpts =
+      pure $
+        PrettifyOpts
+          { endOfLine = LF,
+            indentStyle = SPACE 2
+          }
 
 -- Simulates repeated uses for profiling
 -- profileSimulate :: IO ()
