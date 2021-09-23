@@ -1,6 +1,6 @@
 cabal-version:       2.4
 name:                xml-prettify-text
-version:             0.0.0.0
+version:             1.0.0.0
 synopsis:            See README for more info
 description:         See README for more info
 homepage:            https://github.com/MrcJkb/xml-prettify-text
