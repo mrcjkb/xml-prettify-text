@@ -15,11 +15,11 @@ prettyPrintGoldentTest :: IO [TestTree]
 prettyPrintGoldentTest = sequence [goldenPrettyPrint]
 
 goldenPrettyPrint :: IO TestTree
-goldenPrettyPrint = testGroup "Pretty print XML" . map createTest
+goldenPrettyPrint =
+  testGroup "Pretty print XML" . map createTest
     <$> findByExtension [".xml"] testsDir
-      where
-        testsDir = normalise "data/tests"
-
+  where
+    testsDir = normalise "data/tests"
 
 createTest :: [Char] -> TestTree
 createTest testFile =
@@ -32,5 +32,5 @@ createTest testFile =
     goldenf = replaceExtension testFile ".out.golden"
     outf = replaceExtension testFile ".out"
     testAction = do
-      prettyPrintedXml <- prettyPrintXml <$> TIO.readFile testFile
+      prettyPrintedXml <- prettyPrintXmlDefault <$> TIO.readFile testFile
       TIO.writeFile outf prettyPrintedXml

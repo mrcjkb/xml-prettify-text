@@ -13,7 +13,7 @@ profileSimulate :: IO ()
 profileSimulate = do
   uglyXml <- TIO.readFile uglyXmlFile
   let uglyXmlList = replicate nRuns uglyXml
-  let prettyXmlList = map prettyPrintXml uglyXmlList
+  let prettyXmlList = map prettyPrintXmlDefault uglyXmlList
   pure (deepseq prettyXmlList "Done") >>= putStrLn
   where
     uglyXmlFile :: FilePath
