@@ -36,12 +36,10 @@ data TagType = IncTagType | DecTagType | StandaloneTagType
   deriving stock (Ord, Eq, Enum)
 
 type XmlText = T.Text
+type TagContent = T.Text
 type OneLineXmlText = XmlText
 
-data XmlTag = XmlTag
-  { content :: XmlText,
-    tagtype :: TagType
-  }
+data XmlTag = XmlTag TagContent TagType
   deriving stock (Ord, Eq)
 
 inputToTags :: OneLineXmlText -> [XmlTag]
@@ -83,14 +81,14 @@ lexOneTag xmlText = (XmlTag tagContent tagType, res)
       ('?', _) -> StandaloneTagType
       (_, _) -> IncTagType
 
-printTag :: Int -> XmlTag -> (XmlText, Int)
-printTag tagIdent tag = (outtext, nextTagIdent)
+printTag :: Int -> XmlTag -> (Int, XmlText)
+printTag tagIdent (XmlTag tagContent tagType) = (nextTagIdent, outText)
   where
-    (contentIdent, nextTagIdent) = case tagtype tag of
+    (contentIdent, nextTagIdent) = case tagType of
       IncTagType -> (tagIdent, tagIdent + 1)
       DecTagType -> (tagIdent - 1, tagIdent - 1)
       _ -> (tagIdent, tagIdent)
-    outtext = T.replicate contentIdent "  " <> content tag
+    outText = T.replicate contentIdent "  " <> tagContent
 
 printAllTags :: [XmlTag] -> XmlText
 printAllTags = printTags 0
@@ -99,5 +97,5 @@ printTags :: Int -> [XmlTag] -> XmlText
 printTags _ [] = ""
 printTags ident (tag:tags) = T.intercalate "\n" [tagText, remainingTagText]
   where
-    (tagText, nextTagIdent) = printTag ident tag
+    (nextTagIdent, tagText) = printTag ident tag
     remainingTagText = printTags nextTagIdent tags
