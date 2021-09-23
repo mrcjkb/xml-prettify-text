@@ -91,7 +91,7 @@ mkOptions = Options <$> inputOpt <*> outputOpt <*> prettifyOpts
         ToConsole
         ( long "console"
             <> short 'c'
-            <> help "Output the pretty-printed xml to the console"
+            <> help "Output the pretty-printed XML to the console"
         )
     outputOpt :: Parser OutputOption
     outputOpt = outputToFile <|> outputToConsole
@@ -100,18 +100,23 @@ mkOptions = Options <$> inputOpt <*> outputOpt <*> prettifyOpts
       Opt.option
         auto
         ( long "eol"
-            <> help "The line-break style"
+            <> help "The line-break style: Line Feed (LF), Carriage Return (CR), or both (CRLF)"
             <> showDefault
             <> value LF
-            <> metavar "LF, CR, or CRLF"
+            <> metavar "<LF | CR | CRLF>"
+        )
+    identStyle :: Parser IndentStyle
+    identStyle =
+      Opt.option
+        auto
+        ( long "indent-style"
+            <> help "The indent style (TAB or SPACE INDENT_SIZE)"
+            <> showDefault
+            <> value (SPACE 2)
+            <> metavar "<TAB | SPACE SIZE>"
         )
     prettifyOpts :: Parser PrettifyOpts
-    prettifyOpts =
-      pure $
-        PrettifyOpts
-          { endOfLine = LF,
-            indentStyle = SPACE 2
-          }
+    prettifyOpts = PrettifyOpts <$> identStyle <*> eol
 
 -- Simulates repeated uses for profiling
 -- profileSimulate :: IO ()

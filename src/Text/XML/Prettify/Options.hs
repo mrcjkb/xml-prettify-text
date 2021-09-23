@@ -13,7 +13,7 @@ type IndentSize = Int
 
 -- | The indent style, either `Tab` or `Space` with a given indent size
 data IndentStyle = TAB | SPACE IndentSize
-  deriving stock (Eq)
+  deriving stock (Eq, Read, Show)
 
 -- | The line break style:
 -- Line Feed (LF), Carriage Return (CR),
