@@ -3,7 +3,6 @@ module Main (main) where
 import Prelude
 import Text.XML.Prettify
 import qualified Data.Text.IO as TIO
-import Control.DeepSeq
 
 
 main :: IO ()
