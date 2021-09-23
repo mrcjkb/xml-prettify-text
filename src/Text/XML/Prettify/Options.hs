@@ -12,14 +12,14 @@ import Prelude
 type IndentSize = Int
 
 -- | The indent style, either `Tab` or `Space` with a given indent size
-data IndentStyle = Tab | Space IndentSize
+data IndentStyle = TAB | SPACE IndentSize
   deriving stock (Eq)
 
 -- | The line break style:
 -- Line Feed (LF), Carriage Return (CR),
 -- or both (CRLF)
 data EndOfLine = LF | CR | CRLF
-  deriving stock (Eq)
+  deriving stock (Eq, Read, Show)
 
 -- | The options for the Prettify module
 data PrettifyOpts = PrettifyOpts
@@ -37,5 +37,5 @@ instance TextShow EndOfLine where
   showb _ = foldMap showb [CR, LF]
 
 instance TextShow IndentStyle where
-  showb Tab = "\t"
-  showb (Space indentSize) = mconcat $ replicate indentSize showbSpace
+  showb TAB = "\t"
+  showb (SPACE indentSize) = mconcat $ replicate indentSize showbSpace
