@@ -1,6 +1,6 @@
 cabal-version:       2.4
 name:                xml-prettify-text
-version:             0.0.0.0
+version:             1.0.0.0
 synopsis:            See README for more info
 description:         See README for more info
 homepage:            https://github.com/MrcJkb/xml-prettify-text
@@ -53,12 +53,13 @@ library
                      , text ^>= 1.2.4.0
                      , text-show ^>= 3.8.5
                      , mtl ^>= 2.2.2
-executable xml-prettify-text
+executable xml-prettify
   import:              common-options
   hs-source-dirs:      app
   main-is:             Main.hs
   build-depends:       xml-prettify-text
                      , text ^>= 1.2.4.0
+                     , optparse-applicative ^>= 0.15.1.0
   ghc-options:         -threaded
                        -rtsopts
                        -with-rtsopts=-N

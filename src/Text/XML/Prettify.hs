@@ -46,7 +46,7 @@ prettyPrintXmlDefault =
   prettyPrintXml
     PrettifyOpts
       { endOfLine = LF,
-        indentStyle = Space 2
+        indentStyle = SPACE 2
       }
 
 -- | Pretty-print an XML text
