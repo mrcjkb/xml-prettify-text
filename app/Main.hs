@@ -8,6 +8,9 @@ import Options.Applicative as Opt
 import System.IO.Error (ioeGetFileName, isDoesNotExistError)
 import Text.XML.Prettify
 import Prelude
+import GHC.IO.Exception (ExitCode)
+import Data.Maybe (fromMaybe)
+import Control.Monad.IO.Class (liftIO)
 
 main :: IO ()
 main =
