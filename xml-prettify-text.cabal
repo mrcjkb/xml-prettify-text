@@ -1,8 +1,8 @@
 cabal-version:       2.4
 name:                xml-prettify-text
 version:             1.0.0.1
-synopsis:            See README for more info
-description:         See README for more info
+synopsis:            XML pretty printer
+description:         XML pretty printer based on xml-prettify by David M. Rosenberg. Modified to work with Text instead of String and tuned for improved performance.
 homepage:            https://github.com/MrcJkb/xml-prettify-text
 bug-reports:         https://github.com/MrcJkb/xml-prettify-text/issues
 license:             GPL-2.0-only
