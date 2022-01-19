@@ -3,6 +3,10 @@
 `xml-prettify-text` uses [PVP Versioning][1].
 The changelog is available [on GitHub][2].
 
+## 1.0.0.0
+
+Initial release version.
+
 ## 0.0.0.0
 
 * Initially created.
