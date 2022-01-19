@@ -11,9 +11,10 @@ import Prelude
 import GHC.IO.Exception (ExitCode)
 import Data.Maybe (fromMaybe)
 import Control.Monad.IO.Class (liftIO)
+import Main.Utf8 (withUtf8)
 
 main :: IO ()
-main =
+main = withUtf8 $
   (execParser options >>= runMainWithConfig)
     `catches` [ Handler parserExit,
                 Handler printIOError,

@@ -1,6 +1,6 @@
 { mkDerivation, base, filepath, gauge, lib, mtl
 , optparse-applicative, protolude, tasty, tasty-golden, text
-, text-show
+, text-show, with-utf8
 }:
 mkDerivation {
   pname = "xml-prettify-text";
@@ -11,7 +11,7 @@ mkDerivation {
   enableSeparateDataOutput = true;
   libraryHaskellDepends = [ base mtl protolude text text-show ];
   executableHaskellDepends = [
-    base optparse-applicative protolude text
+    base optparse-applicative protolude text with-utf8
   ];
   testHaskellDepends = [
     base filepath gauge protolude tasty tasty-golden text
