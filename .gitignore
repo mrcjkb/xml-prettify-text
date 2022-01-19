@@ -58,3 +58,5 @@ Session.vim
 
 # Tests out files
 *.out
+
+result
