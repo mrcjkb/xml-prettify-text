@@ -3,6 +3,10 @@
 `xml-prettify-text` uses [PVP Versioning][1].
 The changelog is available [on GitHub][2].
 
+## 1.0.0.2
+
+* Fix dependency version bounds based on 'cabal gen-bounds'
+
 ## 1.0.0.1
 
 * Use [`with-utf8`](https://hackage.haskell.org/package/with-utf8) to fix encoding error in command-line app.
