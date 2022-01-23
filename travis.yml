@@ -1,3 +1,0 @@
-language: nix
-nix: 2.5.1
-script: nix-build release.nix
