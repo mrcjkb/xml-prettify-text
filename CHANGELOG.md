@@ -3,6 +3,10 @@
 `xml-prettify-text` uses [PVP Versioning][1].
 The changelog is available [on GitHub][2].
 
+## 1.0.0.3
+
+* Decrease lower version boundary of `base` dependency due to failing Hackage build.
+
 ## 1.0.0.2
 
 * Fix dependency version bounds based on 'cabal gen-bounds'
