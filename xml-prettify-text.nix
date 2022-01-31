@@ -4,7 +4,7 @@
 }:
 mkDerivation {
   pname = "xml-prettify-text";
-  version = "1.0.0.1";
+  version = "1.0.0.3";
   src = ./.;
   isLibrary = true;
   isExecutable = true;
@@ -14,9 +14,10 @@ mkDerivation {
     base optparse-applicative protolude text with-utf8
   ];
   testHaskellDepends = [
-    base filepath gauge protolude tasty tasty-golden text
+    base filepath protolude tasty tasty-golden text
   ];
+  benchmarkHaskellDepends = [ base gauge protolude ];
   homepage = "https://github.com/MrcJkb/xml-prettify-text";
-  description = "See README for more info";
+  description = "XML pretty printer";
   license = lib.licenses.gpl2Only;
 }
